@@ -23,7 +23,7 @@ class Votefind(object):
         self.failed = []
         self.attempts = 0
         #even though the same election name is being repeated 4 times here, the list is necessary for primary election versions of this program. 
-        self.election_name = ['20200317P', '20200317P', '20200317P', '20200317P']
+        self.election_name = ['20201103G', '20201103G', '20201103G', '20201103G']
         fpath = os.getcwd()
         fpath = fpath+'/output/'
         today = datetime.datetime.today()
@@ -315,7 +315,7 @@ class Other_Counties(object):
 
     def retrieve_hamilton(self, browser):
         print("Finding Hamilton")
-        browser.get('https://boe.hamilton-co.org/data/absentee-voters-list.aspx')
+        browser.get('c')
 
         #browser.execute_script("window.scrollTo(500, document.body.scrollHeight);")
 

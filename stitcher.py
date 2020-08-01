@@ -31,17 +31,21 @@ class Stitcher(object):
     def import_vf(self, files = 40):
         '''Takes the number of votefind files to condense.'''
         df = pd.read_csv(self.fpath+'AbsenteeFile.csv', index_col='SOSID')
-        needed_colums= ['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE']
+        needed_colums= ['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE','PHONE' ]
         df = df[needed_colums]
         dfs = []
         dfs.append(df)
         for i in range(1, files):
             try:
-                df = pd.read_csv(self.fpath+'AbsenteeFile({}).csv'.format(i+1), index_col='SOSID', low_memory = False)
-                df = df[needed_colums]
+                df = pd.read_csv(self.fpath+'absenteefile({}).csv'.format(i+1), index_col='SOSID', low_memory = False)
+                try:
+                    df = df[needed_colums]
+                except:
+                    columns_2=['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE']
+                    df = df[needed_colums]
                 dfs.append(df)
             except:
-                print('AbsenteeFile({}).csv not found'.format(i+1))
+                print('absenteefile({}).csv not found'.format(i+1))
 
         df = pd.concat(dfs)
         df.index.names = ['sos_id']
@@ -54,14 +58,15 @@ class Stitcher(object):
                 fname = i
 
         df_hamilton = pd.read_csv(self.fpath+fname, index_col='OVID', low_memory= False)
-        hamilton_columns = ['AbsenteeParty','Request Application Date', 'Return Ballot Date']
-        columns_renamed = ['PARTYAFFIL', 'AVAPPDATE', 'AVRECVDATE']
+        hamilton_columns = ['AbsenteeParty','Request Application Date', 'Return Ballot Date','Phone']
+        columns_renamed = ['PARTYAFFIL', 'AVAPPDATE', 'AVRECVDATE' ,'PHONE']
         df_hamilton = df_hamilton[hamilton_columns]
         df_hamilton.columns = columns_renamed
         df_hamilton.index.names = ['sos_id']
         dfs = []
-        dfs.append(df_hamilton)
         dfs.append(self.df)
+        dfs.append(df_hamilton)
+        
         print('Hamilton Appended to file.')
         df = pd.concat(dfs, sort=True)
         self.df = df
