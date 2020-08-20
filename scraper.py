@@ -288,15 +288,15 @@ class Other_Counties(object):
         
         select_element = Select(browser.find_element_by_id('ContentPlaceHolder1_ContentPlaceHolderMain_ddlElection_Date'))
         #Cuyahoga county orders election dates sequentially. 212 corresponds to the November 5 General election. Unless there is a special, then 213 would be the March primary
-        select_element.select_by_value('227')
+        select_element.select_by_value('229')
 
         change_date = browser.find_element_by_id('ContentPlaceHolder1_ContentPlaceHolderMain_txtDateIssuedFrom')
         change_date.clear()
-        change_date.send_keys('1/1/2020')
+        change_date.send_keys('5/1/2020')
 
         change_other_date = browser.find_element_by_id('ContentPlaceHolder1_ContentPlaceHolderMain_txtDateIssuedTo')
         change_other_date.clear()
-        change_other_date.send_keys('6/2/2020')
+        change_other_date.send_keys('11/2/2020')
 
         select_race = Select(browser.find_element_by_id('ContentPlaceHolder1_ContentPlaceHolderMain_ddlDistrictTypes'))
         select_race.select_by_value('ALL')
