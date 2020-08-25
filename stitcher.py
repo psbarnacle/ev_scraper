@@ -40,12 +40,13 @@ class Stitcher(object):
                 df = pd.read_csv(self.fpath+'absenteefile({}).csv'.format(i+1), index_col='SOSID', low_memory = False)
                 try:
                     df = df[needed_colums]
+                    dfs.append(df)
                 except:
                     columns_2=['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE']
-                    df = df[needed_colums]
-                dfs.append(df)
-            except:
-                print('absenteefile({}).csv not found'.format(i+1))
+                    df = df[columns_2]
+                    dfs.append(df)
+            except Exception as e:
+                print('absenteefile({}).csv not found: {}'.format(i+1,e))
 
         df = pd.concat(dfs)
         df.index.names = ['sos_id']
