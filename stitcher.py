@@ -31,7 +31,32 @@ class Stitcher(object):
     def import_vf(self, files = 40):
         '''Takes the number of votefind files to condense.'''
         df = pd.read_csv(self.fpath+'AbsenteeFile.csv', index_col='SOSID')
-        needed_colums= ['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE','PHONE' ]
+        #needed_colums= ['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE','PHONE' ]
+        needed_colums = ['LASTN'
+        , 'FIRSTN'
+        ,'MIDDLEN'	
+        ,'PREFIXN'	
+        ,'SUFFIXN'	
+        ,'PARTYAFFIL'
+        ,'CNTYIDNUM'
+        ,'AVADDR1'
+        ,'AVADDR2'
+        ,'CITY'
+        ,'STATE'
+        ,'ZIPCODE'
+        ,'COUNTRY'
+        ,'AVSENTDATE'
+        ,'AVSENTMETH'
+        ,'AVRECVDATE'
+        ,'AVRECVMETH'
+        ,'AVAPPTYPE'
+        ,'AVAPPCODE'
+        ,'PRSID'
+        ,'PRECNAME'
+        ,'AVAPPDATE'
+        ,'AVAPPNUM'
+        ,'CURRENTPTYAFFIL'
+        ,'PHONE']
         df = df[needed_colums]
         dfs = []
         dfs.append(df)
@@ -42,7 +67,31 @@ class Stitcher(object):
                     df = df[needed_colums]
                     dfs.append(df)
                 except:
-                    columns_2=['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE']
+                    #columns_2=['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE']
+                    columns_2 = ['LASTN'
+                    , 'FIRSTN'
+                    ,'MIDDLEN'	
+                    ,'PREFIXN'	
+                    ,'SUFFIXN'	
+                    ,'PARTYAFFIL'
+                    ,'CNTYIDNUM'
+                    ,'AVADDR1'
+                    ,'AVADDR2'
+                    ,'CITY'
+                    ,'STATE'
+                    ,'ZIPCODE'
+                    ,'COUNTRY'
+                    ,'AVSENTDATE'
+                    ,'AVSENTMETH'
+                    ,'AVRECVDATE'
+                    ,'AVRECVMETH'
+                    ,'AVAPPTYPE'
+                    ,'AVAPPCODE'
+                    ,'PRSID'
+                    ,'PRECNAME'
+                    ,'AVAPPDATE'
+                    ,'AVAPPNUM'
+                    ,'CURRENTPTYAFFIL']
                     df = df[columns_2]
                     dfs.append(df)
             except Exception as e:
@@ -114,4 +163,7 @@ class Stitcher(object):
         df = df[df.index.get_level_values('sos_id').notna()]
         df = df[df.index.get_level_values('sos_id') != 'VN']   
         df.to_csv(self.fpath+fname)
+        needed_columns= ['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE','PHONE' ]
+        df = df[needed_columns]
+        df.to_csv(self.fpath+'trunc_'+fname)
         #df.to_csv('fullfile.zip', compression = 'zip') having trouble getting this line working. 

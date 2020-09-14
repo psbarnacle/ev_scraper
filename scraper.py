@@ -84,8 +84,8 @@ class Votefind(object):
         files = len(self.successful)-1
         try:
             stitch.import_vf(files)
-        except:
-            print("VF files failed")
+        except Exception as e:
+            print("VF files failed. Reason: {}".format(e))
         try:
             stitch.import_franklin()
         except:
@@ -152,7 +152,7 @@ class Votefind(object):
                 print('Try two... clearing election selection, then trying again')
                 select_element.select_by_value('NONE')
                 print('Clicking again')
-                select_element.select_by_value('20200317P')
+                select_element.select_by_value('20201103G')
             except:
                 try:
                     print('Clicking a third time')
@@ -257,15 +257,18 @@ class Other_Counties(object):
         self.counties = counties
         self. attempt_counties = ['Cuyahoga', 'Franklin']
         self.fpath = fpath 
-    def retrieve_franklin(self,browser, fpath = 'O:/Python Scripts/ev scraper/output/', fname = 'franklin.csv'):
-        franklin_columns = ['BALLOT PARTY', 'DATE REQUESTED', 'DATE MAILED', 'DATE RETURNED']
-        franklin_corrected = ['PARTYAFFIL', 'AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE']
-        df =pd.read_csv('http://boelcd.franklincountyohio.gov/assets/components/ftp.cfc?method=getOverSFTP&LocalPathName=F%3A%5C%5CBOEL%5C%5Cpublic%5C%5Cdownloads%5C%5C&RemotePathName=%2Fpublic%2Fdownloads%2F&FileName=ABSENTEE_LABELS_NEW.txt&Overwrite=true&Delete=true', index_col = 24, delimiter = '\t', low_memory = 'False')
-        df = df[franklin_columns]
-        df.columns = franklin_corrected
-        df.index.names = ['sos_id']
+    def retrieve_franklin(self,browser, fpath = 'O:/Python Scripts/ev scraper/output/', fname = 'franklin_full.csv'):
+        franklin_columns = ['LOCAL_ID','PARTY', 'DATE_REQUESTED', 'DATE MAILED', 'DATE RETURNED']
+        franklin_corrected = ['LOCAL_ID','PARTYAFFIL', 'AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE']
+        df =pd.read_csv('http://boelcd.franklincountyohio.gov/assets/components/ftp.cfc?method=getOverSFTP&LocalPathName=F%3A%5C%5CBOEL%5C%5Cpublic%5C%5Cdownloads%5C%5C&RemotePathName=%2Fpublic%2Fdownloads%2F&FileName=ABSENTEE_LABELS.txt&Overwrite=true&Delete=true'
+, delimiter = '\t', low_memory = 'False')
+        #df = df[franklin_columns]
+        #df.columns = franklin_corrected
+        #df.index.names = ['local_id']
+        for i in df:
+            print(i)
         npath = os.getcwd()
-        df.to_csv(self.fpath+fname)
+        df.to_csv(self.fpath+fname, index=False)
     def retrieve_franklin2(self, browser, fpath = 'O:/Python Scripts/ev scraper/output/', fname = 'franklin.csv'):
         browser.get('https://vote.franklincountyohio.gov/Maps-Data/Absentee-Voter-Labels')
         select_element = Select(browser.find_element_by_id('p_lt_ctl08_pageplaceholder_p_lt_ctl01_AbsenteeVoterLabels_electionDropdown'))
