@@ -163,7 +163,77 @@ class Stitcher(object):
         df = df[df.index.get_level_values('sos_id').notna()]
         df = df[df.index.get_level_values('sos_id') != 'VN']   
         df.to_csv(self.fpath+fname)
-        needed_columns= ['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE','PHONE' ]
+        needed_columns= ['PARTYAFFIL','AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE','AVAPPTYPE','AVRECVMETH','PHONE' ]
         df = df[needed_columns]
         df.to_csv(self.fpath+'trunc_'+fname)
+        rejections = [
+            'ADDRESS ISSUE',
+            'BIRTHDAY ISSUE',
+            'BLANK',
+            'BLANK ID ENV',
+
+
+
+
+
+            'ID ENV. INCMPLT',
+            'ID INCORRECT',
+            'ID ISSUE',
+            'ID MISMATCH',
+            'ID MISSING',
+            'ID NOT MATCH',
+
+            'INSUFFICENT INF',
+            'INVALID ID INFO',
+            'INVALID IDINFO',
+
+
+
+            'MISSING ID',
+            'MISSING ID INFO',
+            'MISSING INFO',
+
+
+            'NAME MISMATCH',
+            'NEEDS CORRECTED',
+
+            'NO ID ENV',
+            'NO ID ENVELOPE',
+            'NO SIG',
+            'NO SIGNATURE',
+
+            'NON MATCH SIG',
+
+
+            'NOT REG ADDR',
+            'NOT REGD ADDR',
+
+            'OTHER INVLD ID',
+            'OTHER ISSUE'
+
+        ]
+        df_rejections = []
+        for i in rejections:
+            df2 = df[df['AVRECVMETH']==i]
+            df_rejections.append(df2)
+        df_reject = pd.concat(df_rejections)
+        df_reject.to_csv(self.fpath+'rejections.csv')
+
+
+
+
         #df.to_csv('fullfile.zip', compression = 'zip') having trouble getting this line working. 
+code = ''''avappcode', 
+'INCORRECT ADDR', 
+'SIG ISSUE', 
+'ID ISSUE', 
+'WITHDRAWN', 
+'DOB ISSUE', 
+'ELECTION DATE', 
+'INCOMPLETE', 
+'WITHDRAW', 
+'VOTER CANCELED', 
+'NOT REGISTERED', 
+'MISS STATEMENT', 
+'INCOORECT ADDR', 
+'INCORRECT' '''

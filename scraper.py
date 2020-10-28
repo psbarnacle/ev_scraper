@@ -258,17 +258,100 @@ class Other_Counties(object):
         self. attempt_counties = ['Cuyahoga', 'Franklin']
         self.fpath = fpath 
     def retrieve_franklin(self,browser, fpath = 'O:/Python Scripts/ev scraper/output/', fname = 'franklin_full.csv'):
-        franklin_columns = ['LOCAL_ID','PARTY', 'DATE_REQUESTED', 'DATE MAILED', 'DATE RETURNED']
-        franklin_corrected = ['LOCAL_ID','PARTYAFFIL', 'AVAPPDATE', 'AVSENTDATE', 'AVRECVDATE']
-        df =pd.read_csv('http://boelcd.franklincountyohio.gov/assets/components/ftp.cfc?method=getOverSFTP&LocalPathName=F%3A%5C%5CBOEL%5C%5Cpublic%5C%5Cdownloads%5C%5C&RemotePathName=%2Fpublic%2Fdownloads%2F&FileName=ABSENTEE_LABELS.txt&Overwrite=true&Delete=true'
-, delimiter = '\t', low_memory = 'False')
+        franklin_columns = ['PRECINCT NAME'
+        ,'PREICNCT CODE'
+        ,'CITY OR VILLAGE'
+        ,'SCHOOL DISTRICT'
+        ,'TOWNSHIP'
+        ,'HOUSE DISTRICT'
+        ,'SENATE DISTRICT'
+        ,'CONGRESS DISTRICT'
+        ,'POLICE DISTRICT'
+        ,'ROAD DISTRICT'
+        ,'FIRE DISTRICT'
+        ,'PARK DISTRICT'
+        ,'COURT OF APPEALS DISTRICT'
+        ,'BOARD OF ED DISTRICT'
+        ,'VOTER PARTY'
+        ,'BALLOT PARTY'
+        ,'DATE REQUESTED'
+        ,'DATE MAILED'
+        ,'DATE RETURNED'
+        ,'LOCAL ID'
+        ,'SOS VOTER ID'
+        ,'DATE REGISTERED'
+        ,'YEAR OF BIRTH'
+        ,'FIRST NAME'
+        ,'MIDDLE NAME'
+        ,'LAST NAME'
+        ,'SUFFIX NAME'
+        ,'ADDRESS LINE 1'
+        ,'ADDRESS LINE 2'
+        ,'ADDRESS LINE 3'
+        ,'ADDRESS LINE 4'
+        ,'CITY'
+        ,'STATE'
+        ,'ZIP'
+        ,'ZIP PLUS 4'
+        ,'STATUS OUT'
+        ,'BALLOT STATUS'
+        ,'UCM'
+        ,'fake_col'
+
+            
+        ]
+        franklin_corrected = [
+        'SOS VOTER ID'
+        ,'PRECINCT NAME'
+        ,'PREICNCT CODE'
+        ,'CITY OR VILLAGE'
+        ,'SCHOOL DISTRICT'
+        ,'TOWNSHIP'
+        ,'HOUSE DISTRICT'
+        ,'SENATE DISTRICT'
+        ,'CONGRESS DISTRICT'
+        ,'POLICE DISTRICT'
+        ,'ROAD DISTRICT'
+        ,'FIRE DISTRICT'
+        ,'PARK DISTRICT'
+        ,'COURT OF APPEALS DISTRICT'
+        ,'BOARD OF ED DISTRICT'
+        ,'VOTER PARTY'
+        ,'BALLOT PARTY'
+        ,'DATE REQUESTED'
+        ,'DATE MAILED'
+        ,'DATE RETURNED'
+        ,'LOCAL ID'
+
+        ,'DATE REGISTERED'
+        ,'YEAR OF BIRTH'
+        ,'FIRST NAME'
+        ,'MIDDLE NAME'
+        ,'LAST NAME'
+        ,'SUFFIX NAME'
+        ,'ADDRESS LINE 1'
+        ,'ADDRESS LINE 2'
+        ,'ADDRESS LINE 3'
+        ,'ADDRESS LINE 4'
+        ,'CITY'
+        ,'STATE'
+        ,'ZIP'
+        ,'ZIP PLUS 4'
+        ,'STATUS OUT'
+        ,'BALLOT STATUS'
+        ,'UCM'
+
+            
+        ]
+        df =pd.read_csv('http://boelcd.franklincountyohio.gov/assets/components/ftp.cfc?method=getOverSFTP&LocalPathName=F%3A%5C%5CBOEL%5C%5Cpublic%5C%5Cdownloads%5C%5C&RemotePathName=%2Fpublic%2Fdownloads%2F&FileName=ABSENTEE_LABELS_NEWFmt.txt&Overwrite=true&Delete=true', delimiter = '\t', low_memory = 'False')
+        df.to_csv(self.fpath+'franklin_raw.csv', index=False)
         #df = df[franklin_columns]
-        #df.columns = franklin_corrected
+        df.columns = franklin_columns
+        df = df[franklin_corrected]
         #df.index.names = ['local_id']
+        df.to_csv(self.fpath+'franklin_corrected.csv', index=False)
         for i in df:
             print(i)
-        npath = os.getcwd()
-        df.to_csv(self.fpath+fname, index=False)
     def retrieve_franklin2(self, browser, fpath = 'O:/Python Scripts/ev scraper/output/', fname = 'franklin.csv'):
         browser.get('https://vote.franklincountyohio.gov/Maps-Data/Absentee-Voter-Labels')
         select_element = Select(browser.find_element_by_id('p_lt_ctl08_pageplaceholder_p_lt_ctl01_AbsenteeVoterLabels_electionDropdown'))
@@ -287,7 +370,7 @@ class Other_Counties(object):
         browser.find_element_by_id('p_lt_ctl08_pageplaceholder_p_lt_ctl01_AbsenteeVoterLabels_exportText').click()
     def retrieve_cuyahoga(self,browser):
         print("Finding Cuyahoga")
-        browser.get('https://boe.cuyahogacounty.us/en-US/absentee-voter-labels.aspx')
+        browser.get('https://boe.cuyahogacounty.gov/en-US/absentee-voter-labels.aspx')
         
         select_element = Select(browser.find_element_by_id('ContentPlaceHolder1_ContentPlaceHolderMain_ddlElection_Date'))
         #Cuyahoga county orders election dates sequentially. 212 corresponds to the November 5 General election. Unless there is a special, then 213 would be the March primary
@@ -311,16 +394,23 @@ class Other_Counties(object):
 
         print("Downloading Cuyahoga")
 
-        time.sleep(1)
+        time.sleep(5)
 
         browser.find_element_by_id('ContentPlaceHolder1_ContentPlaceHolderMain_btnExport').click()
         print("Cuyahoga Written")
 
     def retrieve_hamilton(self, browser):
         print("Finding Hamilton")
-        browser.get('c')
+        browser.get('https://votehamiltoncountyohio.gov/campaign-media/absentee-lists/')
 
-        #browser.execute_script("window.scrollTo(500, document.body.scrollHeight);")
+        
+        select_element = browser.find_elements_by_css_selector('absentee-list-search')
+        for i in select_element:
+            print(i)
+        #Cuyahoga county orders election dates sequentially. 212 corresponds to the November 5 General election. Unless there is a special, then 213 would be the March primary
+        #select_element.select_by_value('201103')
+
+        browser.execute_script("window.scrollTo(500, document.body.scrollHeight);")
 
         #change_date = browser.find_element_by_id('applicationStartDate')
         #change_date.send_keys('1/1/2020')
@@ -393,7 +483,7 @@ def main2():
     
     browser = Browser(votefind.fpath) #initializes the brwoser
     not_votefind = Other_Counties(votefind.fpath)
-    not_votefind.retrieve_franklin(browser)
+    not_votefind.retrieve_hamilton(browser)
 
 
     
